@@ -1,8 +1,8 @@
 use std::collections::BTreeSet;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::prelude::*;
-use std::io::BufReader;
+// use std::fs::File;
+// use std::io::prelude::*;
+// use std::io::BufReader;
 
 use std::str::Chars;
 use wasm_bindgen::prelude::*;
@@ -26,7 +26,8 @@ pub fn echo(s: &str) -> String {
 
 lazy_static! {
     static ref SENSITIVE_WORD_MAP: HashMap<char, SensitiveWordMap> = {
-        let set = read_sensitive_word_file();
+        // let set = read_sensitive_word_file();
+        let set = read_sensitive_word_map();
         build_sensitive_word_map(set)
     };
 }
@@ -44,21 +45,45 @@ struct SensitiveWordMap {
 }
 
 /// 读取敏感词库中的内容，将内容添加到set集合中
-fn read_sensitive_word_file() -> BTreeSet<String> {
+// fn read_sensitive_word_file() -> BTreeSet<String> {
+//     let mut set = BTreeSet::<String>::new();
+//     match File::open("sensitive-words.txt") {
+//         Ok(f) => {
+//             let reader = BufReader::new(f);
+//             let lines = reader.lines();
+//             for line in lines.map(|x| x.unwrap()) {
+//                 println!("{}", line);
+
+//                 set.insert(line);
+//             }
+//         }
+//         Err(e) => panic!("can't open this file :{}", e),
+//     }
+
+//     set
+// }
+
+fn read_sensitive_word_map() -> BTreeSet<String> {
     let mut set = BTreeSet::<String>::new();
-    match File::open("sensitive-words.txt") {
-        Ok(f) => {
-            let reader = BufReader::new(f);
-            let lines = reader.lines();
-            for line in lines.map(|x| x.unwrap()) {
-                println!("{}", line);
-
-                set.insert(line);
-            }
-        }
-        Err(e) => panic!("can't open this file :{}", e),
-    }
-
+    set.insert(String::from("Fuck"));
+    set.insert(String::from("Bitch"));
+    set.insert(String::from("套"));
+    set.insert(String::from("套现"));
+    set.insert(String::from("套现王"));
+    set.insert(String::from("套利"));
+    set.insert(String::from("信用"));
+    set.insert(String::from("信用卡"));
+    set.insert(String::from("信用卡套现"));
+    set.insert(String::from("信用卡代还"));
+    set.insert(String::from("信用卡代付"));
+    set.insert(String::from("花呗代还"));
+    set.insert(String::from("T+1"));
+    set.insert(String::from("T1"));
+    set.insert(String::from("D1"));
+    set.insert(String::from("D+1"));
+    set.insert(String::from("结算"));
+    set.insert(String::from("结算费"));
+    set.insert(String::from("免结算费"));
     set
 }
 
