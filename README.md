@@ -13,7 +13,7 @@
 
 ```
 $ docker pull secondstate/ssvm-nodejs-starter:v1
-$ docker run -p 3000:3000 --rm -it -v $(pwd):/app secondstate/ssvm-nodejs-starter:v1
+$ docker run -p 9090:3000 --rm -it -v $(pwd):/app secondstate/ssvm-nodejs-starter:v1
 (docker) # cd /app
 (docker) # ssvmup build
 (docker) # node node/app.js
@@ -22,11 +22,19 @@ $ docker run -p 3000:3000 --rm -it -v $(pwd):/app secondstate/ssvm-nodejs-starte
 From a second terminal window, you can test the local server.
 
 ```
-$ curl http://localhost:3000/?name=SSVM
+$ curl http://localhost:9090/?name=SSVM
 hello SSVM
+
+$ curl http://localhost:9090/?sentence=Fuck%20you,%20Son%20of%20Bitch
+**** you, Son of *****
 ```
+or you can test from remote client (eg browser or curl)
+```
+$ curl -s http://120.79.15.245:9090/?name=SSVM
+hello SSVM
 
-
+$ $ curl -s http://120.79.15.245:9090/?sentence=Fuck%20you,%20Son%20of%20Bitch
+**** you, Son of *****
 ## Use VSCode Codespace
 
 <p>
