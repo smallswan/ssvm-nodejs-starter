@@ -8,7 +8,6 @@ const hostname = '0.0.0.0';
 const port = 3000;
 
 const server = http.createServer((req, res) => {
-  console.log(url);
   const queryObject = url.parse(req.url,true).query;
   if (queryObject['name']) {
     res.writeHead(200, {'Content-Type':'text/html; charset=utf-8'});
