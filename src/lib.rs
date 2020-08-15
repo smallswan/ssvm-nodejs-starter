@@ -1,11 +1,12 @@
 use std::collections::BTreeSet;
 use std::collections::HashMap;
-// use std::fs::File;
-// use std::io::prelude::*;
-// use std::io::BufReader;
+use std::fs::File;
+use std::io::prelude::*;
+use std::io::BufReader;
 
 use std::str::Chars;
 use wasm_bindgen::prelude::*;
+use ssvm_wasi_helper::ssvm_wasi_helper::_initialize;
 
 #[macro_use]
 extern crate lazy_static;
@@ -24,9 +25,27 @@ pub fn echo(s: &str) -> String {
     replace_str
 }
 
+#[wasm_bindgen]
+pub fn read_file(path: &str) -> String {
+   _initialize();
+  let mut f = File::open(path).unwrap();
+  let mut s = String::new();
+  match f.read_to_string(&mut s) {
+    Ok(_) => {
+        let set = read_sensitive_word_file(path);
+        println!("set :{:?}",set);
+
+        s
+    },
+    Err(e) => e.to_string(),
+  }
+}
+
+
+
 lazy_static! {
     static ref SENSITIVE_WORD_MAP: HashMap<char, SensitiveWordMap> = {
-        // let set = read_sensitive_word_file();
+        // let set = read_sensitive_word_file("sensitive-words.txt");
         let set = read_sensitive_word_map();
         build_sensitive_word_map(set)
     };
@@ -45,23 +64,23 @@ struct SensitiveWordMap {
 }
 
 /// 读取敏感词库中的内容，将内容添加到set集合中
-// fn read_sensitive_word_file() -> BTreeSet<String> {
-//     let mut set = BTreeSet::<String>::new();
-//     match File::open("sensitive-words.txt") {
-//         Ok(f) => {
-//             let reader = BufReader::new(f);
-//             let lines = reader.lines();
-//             for line in lines.map(|x| x.unwrap()) {
-//                 println!("{}", line);
+fn read_sensitive_word_file(path: &str) -> BTreeSet<String> {
+    let mut set = BTreeSet::<String>::new();
+    match File::open(path) {
+        Ok(f) => {
+            let reader = BufReader::new(f);
+            let lines = reader.lines();
+            for line in lines.map(|x| x.unwrap()) {
+                println!("{}", line);
 
-//                 set.insert(line);
-//             }
-//         }
-//         Err(e) => panic!("can't open this file :{}", e),
-//     }
+                set.insert(line);
+            }
+        }
+        Err(e) => panic!("can't open this file :{}", e),
+    }
 
-//     set
-// }
+    set
+}
 
 fn read_sensitive_word_map() -> BTreeSet<String> {
     let mut set = BTreeSet::<String>::new();
